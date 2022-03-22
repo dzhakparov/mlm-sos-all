@@ -244,7 +244,7 @@ def dummy_coding_multiple_items_entries(data, colnames, coding=None, split=';', 
     return data
 
 
-def table_unique_values(df):
+def table_unique_values(df, width=500):
     data = df.copy()
 
     all_columns = list(data)  # Creates list of all column headers
@@ -285,6 +285,7 @@ def table_unique_values(df):
                             total=v_total
                             )).reset_index()
 
+    dff.style.set_properties(subset=['values'], **{'width': f'{width}px'})
     dff = dff.sort_values(by=['relative_NA'], ascending=False)
     return dff
 

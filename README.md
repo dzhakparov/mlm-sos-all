@@ -52,8 +52,8 @@ clone!) has to be built. At least these 4 files have to be in this folder:
 * meta-data_file defined in config (exp. 'metadata.txt')
 
 
-If all files are available the notebook can be executed. A folder **'output'** and a subfolder with timestamp
-and some other config-information is build. All results, plots and files are stored there.
+If all files are available the notebook can be executed. A folder **'output'** is build
+and all files are stored there.
 
 
 ## More Information
