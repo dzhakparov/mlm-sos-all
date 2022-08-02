@@ -59,3 +59,13 @@ and all files are stored there.
 ## More Information
 More Information is available under: 
 * **'sosall/docs/build/html/index.html'**
+
+
+# PIP / APPTAINER
+pip list --format=freeze > requirements.txt  (einige imports löschen, z.B. eigene Packages)
+sudo apptainer build sosall.sif sosall.def
+apptainer shell sosall.sif  (interactively)
+
+##  run jupyter notebook interactively
+ipython
+run statistical_tests.ipynb

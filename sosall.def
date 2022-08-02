@@ -1,0 +1,31 @@
+Bootstrap: dockerls
+From: python:3.9.13-buster
+
+%setup
+    mkdir ${APPTAINER_ROOTFS}/data && mkdir ${APPTAINER_ROOTFS}/src
+
+%files
+    requirements.txt /opt
+    pkg pkg
+
+%environment
+     export WD=${APPTAINER_ROOTFS}/src
+     export SYS=APPTAINER
+
+%post
+   NOW=`date`
+   echo "export NOW=\"${NOW}\"" >> $APPTAINER_ENVIRONMENT
+   apt-get update && apt-get install vim -y
+   cd pkg && pip install sklearn_custom-0.0.23-py3-none-any.whl && pip install PredictorPipeline-0.0.18-py3-none-any.whl && pip install misc-0.0.11-py3-none-any.whl && pip install statTests-0.0.3-py3-none-any.whl
+   cd ../opt && pip install -r requirements.txt
+
+#%runscript
+#    export APPTAINER_BIND="data:/data,src:/src"
+#    export RUN=TRUE
+#    echo "Container was created $NOW"
+#    echo "Run: python3 ${WD}/$*"
+#    python3 ${WD}/$*
+
+%labels
+    Author Marco Schmid
+    Version v0.0.1 (package: TimeSeriesModifier-0.0.6-py3-none-any.whl)
