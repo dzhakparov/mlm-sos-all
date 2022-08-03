@@ -1,4 +1,4 @@
-Bootstrap: dockerls
+Bootstrap: docker
 From: python:3.9.13-buster
 
 %setup

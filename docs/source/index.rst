@@ -6,13 +6,15 @@
 Welcome to SOSALL's documentation!
 ==================================
 
-This is the help page of the SOSALL-project. Here xyou can find information to preprocessing data, modeling and
+This is the help page of the SOSALL-project. Here you can find information to preprocessing data, modeling and
 interpretation of the models.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   content/apptainer
+   content/general_structure
    content/preprocessing
    content/modeling
    content/interpretation
