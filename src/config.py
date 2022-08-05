@@ -112,7 +112,8 @@ if subset == "South Africa":
         'eczema_age',
         'eczema_ever',
         'eczema_whodiagnosed',
-        'medication_steroidcreams'
+        'medication_steroidcreams',
+        'BSA'
     ]
 
 elif subset == "Switzerland":
