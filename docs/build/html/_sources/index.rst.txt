@@ -13,10 +13,9 @@ interpretation of the models.
    :maxdepth: 2
    :caption: Contents:
 
+   content/questions
+   content/general_structure
    content/apptainer
-   content/preprocessing
-   content/modeling
-   content/interpretation
 
 
 .. Indices and tables

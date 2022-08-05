@@ -16,7 +16,7 @@ From: python:3.9.13-buster
    NOW=`date`
    echo "export NOW=\"${NOW}\"" >> $APPTAINER_ENVIRONMENT
    apt-get update && apt-get install vim -y
-   cd pkg && pip install sklearn_custom-0.0.23-py3-none-any.whl && pip install PredictorPipeline-0.0.18-py3-none-any.whl && pip install misc-0.0.11-py3-none-any.whl && pip install statTests-0.0.3-py3-none-any.whl
+   cd pkg && pip install sklearn_custom-0.1.0-py3-none-any.whl && pip install PredictorPipeline-0.0.18-py3-none-any.whl && pip install misc-0.0.11-py3-none-any.whl && pip install statTests-0.0.3-py3-none-any.whl
    cd ../opt && pip install -r requirements.txt
 
 #%runscript

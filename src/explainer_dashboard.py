@@ -10,7 +10,7 @@ from config import loging_config
 from config import explainer_dashboard_path as paths
 from PredictorPipeline.predicting.predictor import Predictor
 from PredictorPipeline.evaluating.evaluator import Evaluator
-from explainerdashboard import ClassifierExplainer, ExplainerDashboard
+from explainerdashboard import ClassifierExplainer, ExplainerDashboard, ExplainerHub
 
 
 # https://explainerdashboard.readthedocs.io/en/latest/
@@ -34,6 +34,7 @@ def run():
     y = predictor.y_train.astype(int)
 
     evaluator = Evaluator(predictor=predictor)
+    df = evaluator.get_models(type="df")
 
     if isinstance(config.calculate_model_ids, str):
         model_ids = [config.calculate_model_ids]
@@ -66,6 +67,7 @@ def run():
         model = evaluator.get_models(mode=model_id)
 
         if not model:
+            os.rmdir(folder)
             logger.error(f"model with id {model_id} has not been calculated ...")
             continue
 
@@ -81,25 +83,56 @@ def run():
                                         **kwargs
                                         )
 
-        db = ExplainerDashboard(explainer=explainer)
+        # TODO: add generic score (config.py)
+        score = df.loc[df['id'] == model_id, 'mean_validation_accuracy'].values[0]
+
+        db = ExplainerDashboard(explainer=explainer, title=f"{model_id}", name=f"{model_id}",
+                                description=f"{str(estimator)}, mean_validation_accuracy: {round(score, 3)}")
 
         db.to_yaml(f"{os.path.join(folder, 'dashboard.yaml')}",
                    explainerfile=f"explainer.dill", dump_explainer=True)
 
-    # run dashboard
-    # TODO: hub for multiple dashboards
-    if config.run_dashboard:
+    # run dashboard or hub
+    dashboards = list()
+    if config.run_dashboard == "all":
+        for root, dirs, files in os.walk(paths['output_folder'], topdown=False):
+            for name in dirs:
+                dashboards.append(name)
+    elif isinstance(config.run_dashboard, str):
+        dashboards.append(config.run_dashboard)
+    elif not isinstance(config.run_dashboard, list):
+        logger.warning(f"run_dashboard is not instance of str (id), or list[ids] or 'all' ({config.run_dashboard})."
+                       f"No dashboard will be started!")
+        return None
+
+    if len(dashboards) == 1:
         try:
-            path = os.path.join(paths['output_folder'], config.run_dashboard)
+            path = os.path.join(paths['output_folder'], dashboards[0])
             db = ExplainerDashboard.from_config(f"{os.path.join(path, 'explainer.dill')}",
                                                 f"{os.path.join(path, 'dashboard.yaml')}")
-            logger.info(f"... run loaded ExplainerDashboard [{config.run_dashboard}]!")
+            logger.info(f"... run loaded ExplainerDashboard [{dashboards[0]}]!")
             kwargs = _get_kwargs(db.run)
             db.run(**kwargs)
         except FileNotFoundError:
             logger.warning(f"did not found explainer.dill and/or dashboard.yaml in {path}!")
     else:
-        logger.info(f"No ExplainerDashboard [{config.run_dashboard}] starts!")
+        list_db = []
+        for id in dashboards:
+            try:
+                path = os.path.join(paths['output_folder'], id)
+                db = ExplainerDashboard.from_config(
+                    f"{os.path.join(path, 'explainer.dill')}",
+                    f"{os.path.join(path, 'dashboard.yaml')}",
+                )
+                list_db.append(db)
+            except FileNotFoundError:
+                logger.warning(f"did not found explainer.dill and/or dashboard.yaml in {path}!")
+
+        logger.info(f"... run ExplainerHub with dashboards: {list_db}")
+
+        hub = ExplainerHub(list_db)
+        kwargs = _get_kwargs(hub.run)
+        hub.run(**kwargs)
 
 
 def _get_kwargs(method):
@@ -114,7 +147,7 @@ def _get_kwargs(method):
     signature = inspect.signature(method)
     params = list(signature.parameters)
 
-    kwargs = {k: v for k,v in kwargs.items() if k in params}
+    kwargs = {k: v for k, v in kwargs.items() if k in params}
 
     return kwargs
 

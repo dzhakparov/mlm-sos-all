@@ -3,6 +3,7 @@ import pickle
 import shutil
 import socket
 import config
+import pandas as pd
 from loguru import logger
 from pprint import pformat
 from config import loging_config
@@ -20,6 +21,7 @@ def run():
     data = _build_subset(data)
     data = _build_target(data)
     data = _build_feature_columns(data)
+    _scan_data(data)
     test_data, train_data = _build_train_test_data(data)
 
     logger.info(f"parameters: \n{pformat(config.parameters)}")
@@ -167,6 +169,17 @@ def _store_data(train_data, test_data):
             item.to_csv(f"{paths['output_folder']}/{name}.csv", index=True, header=True)
             item.to_pickle(f"{paths['output_folder']}/{name}.pkl")
     logger.info(f"stored train- and test-data successfully as .csv and .pkl in '{paths['output_folder']}'!")
+
+
+def _scan_data(data):
+    """ scans data for inconsistencies """
+
+    pd.set_option('display.max_rows', 500)
+    types = data.dtypes
+    nas = data.isnull().sum(axis=0)
+    out = pd.concat([types, nas], axis=1)
+    out.columns = ['types', 'missing values']
+    logger.info(f"data: \n{out}")
 
 
 if __name__ == '__main__':

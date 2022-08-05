@@ -5,8 +5,8 @@ independently of the system and that all resources (exp. all system cores) can b
 
 To start this container ```apptainer``` has to be installed on the underlying system
 [[quick-installation-steps](https://apptainer.org/docs/user/main/quick_start.html#quick-installation-steps)].
-```Apptainer``` is only running on Linux-based systems natively. If the system is a Mac or Windows ```VirtualBox``` 
-[[VirtualBox](https://www.virtualbox.org/)] can be installed. So Linux can be run in a separate environment on a 
+```Apptainer``` is only running on Linux-based systems natively. If the system is a Mac or Windows ```VirtualBox```
+[[VirtualBox](https://www.virtualbox.org/)] can be installed. So Linux can be run in a separate environment on a
 non-Linux system.
 
 ## build a .sif-file
@@ -17,7 +17,7 @@ Next a .sif-file (comparable with a Docker-File or better Docker-image) is neede
 If a new .sif-file should be build, this can be achieved with a .def-file 
 (comparable with Docker-File)
 
-``` text
+```
 Bootstrap: docker
 From: python:3.9.13-buster
 
@@ -42,7 +42,7 @@ From: python:3.9.13-buster
 
 To generate the requirements.txt from a underlying conda-environment type:
 
-```text
+```
 pip list --format=freeze > requirements.txt 
 ```
 
@@ -59,7 +59,7 @@ from the pkg-folder in the .sif-file building process.
 
 From this .def-File a .sif-file is build with:
 
-```text
+```
 sudo apptainer build sosall.sif sosall.def
 ```
 
@@ -79,19 +79,19 @@ we have access to all resources needed when running code inside the container.
 
 ### start container in shell mode 
 
-```text
+```
 apptainer shell sossall.sif
 ```
 
 ### run script in shell-mode
 
-```text
+```
 python3 ml_models.py
 ```
 
 ### run jupyter notebook in shell-mode
 
-```text
+```
 ipython
 run statistical_tests.ipynb
 ```
