@@ -4,6 +4,8 @@
 
 This repository contains the analysis script for the publication ["Protective and Susceptibility Clusters of Environmental Factors, Gene Expression, Antibody Responses, and Cytokines in Pediatric Atopic Dermatitis: Insights from Multi-Modal Data Integration"](https://www.medrxiv.org/content/10.64898/2026.01.10.26343854v1). 
 
+![Graphical Abstract](./figures/graphical_abstract.tiff)
+
 ## Repository Structure 
  
 `01_clinical_data/` - Contains the analysis file for the clinical data analysis
